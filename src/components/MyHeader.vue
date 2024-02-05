@@ -16,11 +16,11 @@ export default {
     },
     methods: {
         add(){
-            if(this.title.trim() !== ""){
-                const todoObj = {id: nanoid(), title: this.title, done: false};
-                this.title = "";
-                this.$emit("addToDo", todoObj);
-            } 
+            if(this.title.trim() == "") return alert("输入不能为空");
+            const todoObj = {id: nanoid(), title: this.title, done: false};
+            this.title = "";
+            this.$emit("addToDo", todoObj);
+            
         }
     }
 }

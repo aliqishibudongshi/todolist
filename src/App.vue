@@ -40,21 +40,27 @@ export default {
     }
   },
   methods: {
-    //App.vue通过此方法实现MyHeader组件传递数据
+    //添加一条todo
     addToDo(todoObj){
       this.todos.unshift(todoObj);
     },
-    //App.vue通过此方法传递数据给MyItem.vue
+    //勾选一条todo
     checkToDo(id){
       this.todos.forEach(todo => {
         if(todo.id === id) todo.done = !todo.done;
       });
     },
-    //App.vue通过此方法传递数据给MyItem.vue
+    //删除一条todo
     deleteToDo(_, id){
       this.todos = this.todos.filter(todo => todo.id !== id);
     },
-    //全选
+    //更新一条todo
+    updateToDo(title, id){
+      this.todos.forEach(todo => {
+        if(todo.id === id) todo.title = title;
+      });
+    },
+    //全选todo
     checkAllToDo(done){
       this.todos.forEach(todo => {
         todo.done = done;
@@ -70,9 +76,10 @@ export default {
     // this.$bus.$on("deleteToDo", this.deleteToDo);
     //use pubsub way to achieve above function
     this.pid = pubsub.subscribe("deleteToDo", this.deleteToDo);
+    this.$bus.$on("updateToDo", this.updateToDo);
   },
   beforeDestroy() {
-    this.$bus.$off("checkToDo");
+    this.$bus.$off(["checkToDo", "updateToDo"]);
     pubsub.unsubscribe(this.pid);
   }
 }
@@ -101,6 +108,18 @@ body {
   color: #fff;
   background-color: #da4f49;
   border: 1px solid #bd362f;
+}
+
+.btn-edit {
+  color: #fff;
+  background-color: #49dab3;
+  border: 1px solid #33967c;
+  margin-right: 10px;
+}
+
+.btn-edit:hover {
+  color: #fff;
+  background-color: #33967c;
 }
 
 .btn-danger:hover {

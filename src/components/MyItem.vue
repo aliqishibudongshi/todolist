@@ -1,10 +1,20 @@
 <template>
     <li>
         <label>
-        <input type="checkbox" :checked="todo.done"  @change="handleCheck(todo.id)"/>
-        <span>{{todo.title}}</span>
+        <input
+        type="checkbox"
+        :checked="todo.done"  @change="handleCheck(todo.id)"
+        />
+        <span v-show="!todo.isEdit">{{todo.title}}</span>
+        <input
+        type="text"
+        v-show="todo.isEdit"
+        :value="todo.title"
+        @blur="handleBlur($event, todo)"
+        />
         </label>
         <button class="btn btn-danger" @click="handleDelete(todo.id)">删除</button>
+        <button class="btn btn-edit" @click="handleUpdate(todo)" v-show="!todo.isEdit">编辑</button>
     </li>
 </template>
 
@@ -25,6 +35,22 @@ export default {
                 //use pubsub way to achieve above function
                 pubsub.publish("deleteToDo", id);
             }
+        },
+        //更新
+        handleUpdate(todo){
+            if(Object.prototype.hasOwnProperty.call(todo, "isEdit")){
+                todo.isEdit = !todo.isEdit;
+            }else{
+                this.$set(todo, "isEdit", true);
+            }
+        },
+        //失去焦点回调（真正的更新）
+        handleBlur(e, todo){
+            todo.isEdit = false;
+            if(e.target.value.trim() == "") return alert("输入不能为空");
+            //把id和真正更新的title给App
+            this.$bus.$emit("updateToDo", e.target.value, todo.id);
+
         }
     },
 }
