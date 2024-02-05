@@ -13,7 +13,7 @@
 <script>
 export default {
     name: "MyFooter",
-    props: ["todos", "checkAllToDo", "clearAllToDo"],
+    props: ["todos"],
     computed: {
         total(){
             return this.todos.length;        
@@ -28,14 +28,13 @@ export default {
                 return this.total === this.doneTotal && this.total > 0;
             },
             set(value){
-                this.checkAllToDo(value);
+                this.$emit("checkAllToDo", value);
             }
         }
     },
     methods: {
         clearAll(){
-            //调用App.vue传过来的方法，实现删除已完成。
-            this.clearAllToDo();
+            this.$emit("clearAllToDo");
         }
     }
 }

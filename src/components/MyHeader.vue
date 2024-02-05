@@ -14,13 +14,12 @@ export default {
             title: ""
         }
     },
-    props: ["addToDo"],
     methods: {
         add(){
             if(this.title.trim() !== ""){
                 const todoObj = {id: nanoid(), title: this.title, done: false};
                 this.title = "";
-                this.addToDo(todoObj);
+                this.$emit("addToDo", todoObj);
             } 
         }
     }
