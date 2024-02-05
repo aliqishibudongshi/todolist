@@ -11,6 +11,7 @@
         v-show="todo.isEdit"
         :value="todo.title"
         @blur="handleBlur($event, todo)"
+        ref="inputTitle"
         />
         </label>
         <button class="btn btn-danger" @click="handleDelete(todo.id)">删除</button>
@@ -43,6 +44,10 @@ export default {
             }else{
                 this.$set(todo, "isEdit", true);
             }
+            //编辑的时候自动获取焦点
+            this.$nextTick(function(){
+                this.$refs.inputTitle.focus();
+            })
         },
         //失去焦点回调（真正的更新）
         handleBlur(e, todo){
