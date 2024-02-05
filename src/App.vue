@@ -14,6 +14,7 @@
 </template>
 
 <script>
+import pubsub from "pubsub-js"
 import MyHeader from './components/MyHeader';
 import MyList from './components/MyList';
 import MyFooter from './components/MyFooter';
@@ -50,7 +51,7 @@ export default {
       });
     },
     //App.vue通过此方法传递数据给MyItem.vue
-    deleteToDo(id){
+    deleteToDo(_, id){
       this.todos = this.todos.filter(todo => todo.id !== id);
     },
     //全选
@@ -66,10 +67,13 @@ export default {
   },
   mounted() {
     this.$bus.$on("checkToDo", this.checkToDo);
-    this.$bus.$on("deleteToDo", this.deleteToDo);
+    // this.$bus.$on("deleteToDo", this.deleteToDo);
+    //use pubsub way to achieve above function
+    this.pid = pubsub.subscribe("deleteToDo", this.deleteToDo);
   },
   beforeDestroy() {
-    this.$bus.$off(["checkToDo", "deleteToDo"])
+    this.$bus.$off("checkToDo");
+    pubsub.unsubscribe(this.pid);
   }
 }
 </script>
